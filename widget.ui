@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>646</width>
-    <height>646</height>
+    <width>683</width>
+    <height>564</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGraphicsView" name="graphicsView"/>
+    <widget class="PlayGround" name="graphicsView"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -56,46 +56,15 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="sizeLabel">
-       <property name="text">
-        <string>Size   </string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSlider" name="sizeSlider">
-       <property name="minimum">
-        <number>5</number>
-       </property>
-       <property name="maximum">
-        <number>20</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="sizeNum">
-       <property name="text">
-        <string>num</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="0">
       <widget class="QLabel" name="speedLabel">
        <property name="text">
         <string>Speed</string>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="1">
       <widget class="QSlider" name="speedSlider">
        <property name="minimum">
         <number>5</number>
@@ -108,10 +77,37 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="sizeLabel">
+       <property name="text">
+        <string>Size   </string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSlider" name="sizeSlider">
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <number>20</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
       <widget class="QLabel" name="speedNum">
        <property name="text">
-        <string>num</string>
+        <string>05</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="sizeNum">
+       <property name="text">
+        <string>05</string>
        </property>
       </widget>
      </item>
@@ -119,6 +115,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlayGround</class>
+   <extends>QGraphicsView</extends>
+   <header>PlayGround.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

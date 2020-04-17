@@ -6,6 +6,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+
 }
 
 Widget::~Widget()
@@ -16,10 +17,12 @@ Widget::~Widget()
 
 void Widget::on_sizeSlider_valueChanged(int value)
 {
-    ui->sizeNum->setNum(value);
+    QString str = QString::number(value).rightJustified(2, '0');
+    ui->sizeNum->setText(str);
 }
 
 void Widget::on_speedSlider_valueChanged(int value)
 {
-    ui->speedNum->setNum(value);
+    QString str = QString::number(value).rightJustified(2, '0');
+    ui->sizeNum->setText(str);
 }
