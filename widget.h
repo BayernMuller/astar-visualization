@@ -16,7 +16,8 @@ public:
     ~Widget();
 
 private slots:
-    void on_sizeSlider_valueChanged(int value);
+    void on_boardSlider_valueChanged(int value);
+    void on_blockSlider_valueChanged(int value);
     void on_speedSlider_valueChanged(int value);
 
 private:
