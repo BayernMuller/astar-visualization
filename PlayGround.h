@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QMouseEvent>
+#include <QResizeEvent>
 
 class PlayGround : public QGraphicsView
 {
@@ -14,7 +15,8 @@ public:
     PlayGround(QWidget* parent = nullptr);
 
 public slots:
-    void mousePressEvent(QMouseEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
     void OnBoardResize(int size);
     void OnBlockResize(int size);
     void OnClear();

@@ -139,6 +139,9 @@
        <property name="maximum">
         <number>25</number>
        </property>
+       <property name="value">
+        <number>10</number>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -147,7 +150,7 @@
      <item row="0" column="2">
       <widget class="QLabel" name="blockNum">
        <property name="text">
-        <string>05</string>
+        <string>10</string>
        </property>
       </widget>
      </item>

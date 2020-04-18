@@ -1,9 +1,10 @@
 #include "PlayGround.h"
 #include <QGraphicsItem>
+#include <QDebug>
 
 PlayGround::PlayGround(QWidget* parent)
-    : QGraphicsView(parent)
-    , mBoardSize(5), mBlockSize(5)
+    : QGraphicsView(parent), mScene(parent)
+    , mBoardSize(5), mBlockSize(10)
 {
     setScene(&mScene);
     draw();
@@ -38,22 +39,27 @@ void PlayGround::OnStart()
 
 void PlayGround::draw()
 {
-    QSize halfSize = this->size() / 2;
-    QPointF pivot;
-    pivot.setX(halfSize.width() - (mBoardSize * 0.5) * mBlockSize);
-    pivot.setY(halfSize.height() - (mBoardSize * 0.5) * mBlockSize);
+    QPointF pivot = QWidget::rect().center();
+    const int& side = mBlockSize;
+    pivot.setX(-(mBoardSize * 0.5) * side);
+    pivot.setY(-(mBoardSize * 0.5) * side);
     mScene.clear();
     for (int i = 0; i < mBoardSize; i++)
     {
         for (int j = 0; j < mBoardSize; j++)
         {
-            mScene.addRect(pivot.x() + i * mBlockSize, pivot.y() + j * mBlockSize, mBlockSize, mBlockSize);
-
+            auto item = mScene.addRect(pivot.x() + i * side, pivot.y() + j * side, side, side);
         }
     }
 }
 
 void PlayGround::mousePressEvent(QMouseEvent *event)
 {
-    auto block = mScene.items(event->pos()).front();
+
+}
+
+void PlayGround::resizeEvent(QResizeEvent* event)
+{
+
+
 }
