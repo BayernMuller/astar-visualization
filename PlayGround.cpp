@@ -1,4 +1,5 @@
 #include "PlayGround.h"
+#include "AstarItem.h"
 #include <QGraphicsItem>
 #include <QDebug>
 
@@ -6,6 +7,7 @@ PlayGround::PlayGround(QWidget* parent)
     : QGraphicsView(parent), mScene(parent)
     , mBoardSize(5), mBlockSize(10)
 {
+    QGraphicsView::setMouseTracking(true);
     setScene(&mScene);
     draw();
 }
@@ -48,15 +50,31 @@ void PlayGround::draw()
     {
         for (int j = 0; j < mBoardSize; j++)
         {
-            auto item = mScene.addRect(pivot.x() + i * side, pivot.y() + j * side, side, side);
+            auto* item = new AstarItem(QRect(pivot.x() + i * side, pivot.y() + j * side, side, side));
+            mScene.addItem(item);
         }
     }
 }
 
 void PlayGround::mousePressEvent(QMouseEvent *event)
 {
-
+    qDebug() << event->modifiers();
 }
+
+void PlayGround::mouseMoveEvent(QMouseEvent* event)
+{
+    if (event->buttons() & ~Qt::NoButton)
+    {
+        for (auto i : items(event->pos()))
+        {
+            auto item = reinterpret_cast<AstarItem*>(i);
+            item->SetSelected(event->buttons() & Qt::LeftButton);
+            // LeftButton = enable, OtherButton = disable
+            break; // Only Use one item.
+        }
+    }
+}
+
 
 void PlayGround::resizeEvent(QResizeEvent* event)
 {

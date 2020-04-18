@@ -17,6 +17,7 @@ public:
 public slots:
     void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
     void OnBoardResize(int size);
     void OnBlockResize(int size);
     void OnClear();
