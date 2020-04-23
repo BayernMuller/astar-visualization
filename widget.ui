@@ -90,7 +90,7 @@
      <item row="2" column="2">
       <widget class="QLabel" name="speedNum">
        <property name="text">
-        <string>05</string>
+        <string>00</string>
        </property>
       </widget>
      </item>
@@ -100,7 +100,7 @@
         <cursorShape>ArrowCursor</cursorShape>
        </property>
        <property name="minimum">
-        <number>5</number>
+        <number>0</number>
        </property>
        <property name="maximum">
         <number>20</number>

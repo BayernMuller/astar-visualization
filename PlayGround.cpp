@@ -1,11 +1,11 @@
 #include "PlayGround.h"
-#include "AstarItem.h"
 #include <QGraphicsItem>
 #include <QDebug>
 
 PlayGround::PlayGround(QWidget* parent)
     : QGraphicsView(parent), mScene(parent)
-    , mBoardSize(5), mBlockSize(10)
+    , mBoardSize(5), mBlockSize(10), mIsPlaying(false)
+    , mpStartItem(nullptr), mpEndItem(nullptr)
 {
     QGraphicsView::setMouseTracking(true);
     setScene(&mScene);
@@ -26,7 +26,7 @@ void PlayGround::OnBlockResize(int size)
 
 void PlayGround::OnClear()
 {
-    mScene.clearSelection();
+
 }
 
 void PlayGround::OnPause()
@@ -46,11 +46,12 @@ void PlayGround::draw()
     pivot.setX(-(mBoardSize * 0.5) * side);
     pivot.setY(-(mBoardSize * 0.5) * side);
     mScene.clear();
+    mpEndItem = mpStartItem = nullptr;
     for (int i = 0; i < mBoardSize; i++)
     {
         for (int j = 0; j < mBoardSize; j++)
         {
-            auto* item = new AstarItem(QRect(pivot.x() + i * side, pivot.y() + j * side, side, side));
+            auto* item = new AstarItem(QRect(pivot.x() + i * side, pivot.y() + j * side, side, side), {i, j});
             mScene.addItem(item);
         }
     }
@@ -58,26 +59,53 @@ void PlayGround::draw()
 
 void PlayGround::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << event->modifiers();
+    auto item = reinterpret_cast<AstarItem*>(itemAt(event->pos()));
+    if (!item)
+        return;
+    switch (event->modifiers())
+    {
+    case Qt::ShiftModifier:
+        if (mpStartItem)
+            mpStartItem->SetState(AstarItem::eState::WAY);
+        item->SetState(AstarItem::eState::START);
+        mpStartItem = item;
+        break;
+    case Qt::ControlModifier:
+        if (mpEndItem)
+            mpEndItem->SetState(AstarItem::eState::WAY);
+        item->SetState(AstarItem::eState::END);
+        mpEndItem = item;
+        break;
+    }
 }
 
 void PlayGround::mouseMoveEvent(QMouseEvent* event)
 {
     if (event->buttons() & ~Qt::NoButton)
     {
-        for (auto i : items(event->pos()))
+        auto item = reinterpret_cast<AstarItem*>(itemAt(event->pos()));
+        if (!item)
+            return;
+        if (mpStartItem == item)
         {
-            auto item = reinterpret_cast<AstarItem*>(i);
-            item->SetSelected(event->buttons() & Qt::LeftButton);
-            // LeftButton = enable, OtherButton = disable
-            break; // Only Use one item.
+            mpStartItem->SetState(AstarItem::eState::WAY);
+            mpStartItem = nullptr;
         }
+        if (mpEndItem == item)
+        {
+            mpEndItem->SetState(AstarItem::eState::WAY);
+            mpEndItem = nullptr;
+        }
+        if (event->buttons() & Qt::RightButton)
+        {
+            item->SetState(AstarItem::eState::WAY);
+            return;
+        }
+        item->SetState(AstarItem::eState::WALL);
     }
 }
 
 
 void PlayGround::resizeEvent(QResizeEvent* event)
 {
-
-
 }

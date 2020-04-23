@@ -1,11 +1,11 @@
 #ifndef PLAYGROUND_H
 #define PLAYGROUND_H
 
-#include <QObject>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QMouseEvent>
 #include <QResizeEvent>
+#include "AstarItem.h"
 
 class PlayGround : public QGraphicsView
 {
@@ -28,7 +28,10 @@ private:
     void draw();
 
 private:
+    AstarItem* mpStartItem;
+    AstarItem* mpEndItem;
     QGraphicsScene mScene;
+    bool mIsPlaying;
     int mBlockSize;
     int mBoardSize;
 };

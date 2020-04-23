@@ -7,19 +7,25 @@ class AstarItem : public QGraphicsItem
 {
     friend PlayGround;
 public:
-    AstarItem(QRectF rect);
-    bool IsSelected();
+    enum eState { WAY, WALL, START, END, OPENED, CLOSED };
+
+public:
+    AstarItem(QRectF rect, QPoint pos);
+    eState GetState();
+    QPoint GetPosition();
+    void SetState(eState state);
+    void SetRect(QRect rect);
 
 public: // overrides
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
 private:
-    void SetSelected(bool enable);
-
-private:
+    eState mState;
+    QPoint mPosition;
     QRectF mRect;
-    bool mIsClicked;
+
+    static const QColor mColors[6];
 };
 
 #endif // ASTARITEM_H
