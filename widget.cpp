@@ -39,3 +39,5 @@ void Widget::on_boardSlider_valueChanged(int value)
     QString str = QString::number(value).rightJustified(2, '0');
     ui->boardNum->setText(str);
 }
+
+

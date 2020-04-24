@@ -20,6 +20,8 @@ private slots:
     void on_blockSlider_valueChanged(int value);
     void on_speedSlider_valueChanged(int value);
 
+    void on_radioButton_pressed();
+
 private:
     Ui::Widget *ui;
 };
