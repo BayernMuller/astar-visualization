@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="8,2">
+  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="7,2">
    <item>
     <widget class="PlayGround" name="graphicsView"/>
    </item>
@@ -44,7 +44,7 @@
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QRadioButton" name="radioButton">
+             <widget class="QRadioButton" name="autoRadio">
               <property name="text">
                <string>Auto Mode</string>
               </property>
@@ -68,7 +68,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QRadioButton" name="radioButton_2">
+             <widget class="QRadioButton" name="stepRadio">
               <property name="text">
                <string>Step Mode</string>
               </property>
@@ -182,7 +182,23 @@
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <widget class="QListView" name="listView"/>
+         <widget class="QListView" name="stateList"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>How to use</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set Wall : Drag Left-button&lt;/p&gt;&lt;p&gt;Set Way : Drag Right-button&lt;/p&gt;&lt;p&gt;Set Start : Ctrl + Left-button&lt;/p&gt;&lt;p&gt;Set End : Shift + Left-button&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

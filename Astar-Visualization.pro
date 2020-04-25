@@ -19,12 +19,14 @@ SOURCES += \
     AstarItem.cpp \
     PlayGround.cpp \
     main.cpp \
-    widget.cpp
+    widget.cpp \
+    Astar.cpp
 
 HEADERS += \
     AstarItem.h \
     PlayGround.h \
-    widget.h
+    widget.h \
+    Astar.h
 
 FORMS += \
     widget.ui

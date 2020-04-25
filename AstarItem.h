@@ -7,7 +7,7 @@ class AstarItem : public QGraphicsItem
 {
     friend PlayGround;
 public:
-    enum eState { WAY, WALL, START, END, OPENED, CLOSED };
+    enum eState { WAY, WALL, START, END, OPENED, CLOSED, PATH };
 
 public:
     AstarItem(QRectF rect, QPoint pos);
@@ -25,7 +25,7 @@ private:
     QPoint mPosition;
     QRectF mRect;
 
-    static const QColor mColors[6];
+    static const QColor mColors[7];
 };
 
 #endif // ASTARITEM_H

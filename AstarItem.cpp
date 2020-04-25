@@ -3,9 +3,9 @@
 #include <QPainter>
 #include <QDebug>
 
-const QColor AstarItem::mColors[6]
+const QColor AstarItem::mColors[7]
 {
-    Qt::white, Qt::black, Qt::blue,Qt::cyan ,Qt::green, Qt::red
+    Qt::white, Qt::black, Qt::blue,Qt::cyan ,Qt::green, Qt::red, Qt::darkMagenta
 };
 
 AstarItem::AstarItem(QRectF rect, QPoint pos)

@@ -5,7 +5,7 @@
 PlayGround::PlayGround(QWidget* parent)
     : QGraphicsView(parent), mScene(parent)
     , mBoardSize(5), mBlockSize(10), mIsPlaying(false)
-    , mpStartItem(nullptr), mpEndItem(nullptr)
+    , mpStartItem(nullptr), mpEndItem(nullptr), mpMap(nullptr)
 {
     QGraphicsView::setMouseTracking(true);
     setScene(&mScene);
@@ -36,7 +36,43 @@ void PlayGround::OnPause()
 
 void PlayGround::OnStart()
 {
+    mpMap = new AstarItem**[mBoardSize];
+    for (int i = 0; i < mBoardSize; i++)
+    {
+        mpMap[i] = new AstarItem*[mBoardSize];
+    }
+    for (auto graphicItem : items())
+    {
+        auto item = reinterpret_cast<AstarItem*>(graphicItem);
+        if (item->GetState() == AstarItem::eState::PATH)
+            item->SetState(AstarItem::eState::WAY);
+        auto pt = item->GetPosition();
+        mpMap[pt.y()][pt.x()] = item;
+    }
+    point start = make_pair(mpStartItem->GetPosition().y(), mpStartItem->GetPosition().x());
+    point end = make_pair(mpEndItem->GetPosition().y(), mpEndItem->GetPosition().x());
+    Astar astar(mBoardSize, mBoardSize, mpMap, start, end);
+    node* n = astar.FindPath();
+    if (n)
+        n = n->parent;
+    while (n && n->parent)
+    {
+        mpMap[n->pt.first][n->pt.second]->SetState(AstarItem::eState::PATH);
+        n = n->parent;
+    }
 
+    releaseMap();
+}
+
+void PlayGround::releaseMap()
+{
+    if (!mpMap)
+        return;
+    for (int i = 0; i < mBoardSize; i++)
+    {
+        delete[] mpMap[i];
+    }
+    delete[] mpMap;
 }
 
 void PlayGround::draw()
