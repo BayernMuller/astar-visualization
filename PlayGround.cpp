@@ -53,6 +53,8 @@ void PlayGround::OnStart()
     point end = make_pair(mpEndItem->GetPosition().y(), mpEndItem->GetPosition().x());
     Astar astar(mBoardSize, mBoardSize, mpMap, start, end);
     node* n = astar.FindPath();
+
+    // declude start and end point
     if (n)
         n = n->parent;
     while (n && n->parent)
