@@ -6,10 +6,16 @@ PlayGround::PlayGround(QWidget* parent)
     : QGraphicsView(parent), mScene(parent)
     , mBoardSize(5), mBlockSize(10), mIsPlaying(false)
     , mpStartItem(nullptr), mpEndItem(nullptr), mpMap(nullptr)
+    , mpThread(nullptr)
 {
     QGraphicsView::setMouseTracking(true);
     setScene(&mScene);
     draw();
+}
+
+PlayGround::~PlayGround()
+{
+    releaseMap();
 }
 
 void PlayGround::OnBoardResize(int size)

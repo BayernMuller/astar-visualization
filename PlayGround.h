@@ -25,6 +25,9 @@ public slots:
     void OnStart();
     void OnPause();
 
+public signals:
+    void OnEndFind();
+
 private:
     void draw();
     void releaseMap();
@@ -39,6 +42,7 @@ private:
     bool mIsPlaying;
     int mBlockSize;
     int mBoardSize;
+    int mSpeed;
 };
 
 #endif // PLAYGROUND_H
