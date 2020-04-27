@@ -36,21 +36,10 @@ void PlayGround::OnPause()
 
 void PlayGround::OnStart()
 {
-    mpMap = new AstarItem**[mBoardSize];
-    for (int i = 0; i < mBoardSize; i++)
-    {
-        mpMap[i] = new AstarItem*[mBoardSize];
-    }
-    for (auto graphicItem : items())
-    {
-        auto item = reinterpret_cast<AstarItem*>(graphicItem);
-        if (item->GetState() == AstarItem::eState::PATH)
-            item->SetState(AstarItem::eState::WAY);
-        auto pt = item->GetPosition();
-        mpMap[pt.y()][pt.x()] = item;
-    }
-    point start = make_pair(mpStartItem->GetPosition().y(), mpStartItem->GetPosition().x());
-    point end = make_pair(mpEndItem->GetPosition().y(), mpEndItem->GetPosition().x());
+    point start{mpStartItem->GetPosition().y(), mpStartItem->GetPosition().x()};
+    point end{mpEndItem->GetPosition().y(), mpEndItem->GetPosition().x()};
+
+    allocateMap();
     Astar astar(mBoardSize, mBoardSize, mpMap, start, end);
     node* n = astar.FindPath();
 
@@ -64,6 +53,24 @@ void PlayGround::OnStart()
     }
 
     releaseMap();
+}
+
+void PlayGround::allocateMap()
+{
+    releaseMap();
+    mpMap = new AstarItem**[mBoardSize];
+    for (int i = 0; i < mBoardSize; i++)
+    {
+        mpMap[i] = new AstarItem*[mBoardSize];
+    }
+    for (auto graphicItem : items())
+    {
+        auto item = reinterpret_cast<AstarItem*>(graphicItem);
+        if (item->GetState() == AstarItem::eState::PATH)
+            item->SetState(AstarItem::eState::WAY);
+        auto pt = item->GetPosition();
+        mpMap[pt.y()][pt.x()] = item;
+    }
 }
 
 void PlayGround::releaseMap()

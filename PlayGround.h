@@ -28,6 +28,7 @@ public slots:
 private:
     void draw();
     void releaseMap();
+    void allocateMap();
 
 private:
     Astar* mpAstar;
