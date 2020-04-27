@@ -76,6 +76,16 @@ node* Astar::OneStep()
 	return nullptr;
 }
 
+Astar::list_type& Astar::GetOpenList()
+{
+    return mOpenList;
+}
+
+Astar::list_type& Astar::GetCloseList()
+{
+    return mCloseList;
+}
+
 void Astar::freeList(const list_type& ls)
 {
 	for (const auto& pointer : ls)
