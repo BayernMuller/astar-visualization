@@ -37,6 +37,9 @@ public:
 	node* FindPath();
 	node* OneStep();
 
+    list_type& GetOpenList();
+    list_type& GetCloseList();
+
 private:
 	void freeList(const list_type& ls);
 	bool isValid(point pt);

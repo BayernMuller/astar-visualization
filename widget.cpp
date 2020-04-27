@@ -10,9 +10,11 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
     connect(ui->boardSlider, SIGNAL(valueChanged(int)), ui->graphicsView, SLOT(OnBoardResize(int)));
     connect(ui->blockSlider, SIGNAL(valueChanged(int)), ui->graphicsView, SLOT(OnBlockResize(int)));
+    connect(ui->speedSlider, SIGNAL(valueChanged(int)), ui->graphicsView, SLOT(OnSpeedChange(int)));
     connect(ui->startButton, SIGNAL(clicked()), ui->graphicsView, SLOT(OnStart()));
     connect(ui->clearButton, SIGNAL(clicked()), ui->graphicsView, SLOT(OnClear()));
     connect(ui->pauseButton, SIGNAL(clicked()), ui->graphicsView, SLOT(OnPause()));
+    connect(ui->graphicsView, SIGNAL(OnEndFind()), this, SLOT(OnEndFind()));
 
     ui->pauseButton->setEnabled(false);
     ui->stepButton->setEnabled(false);
@@ -21,6 +23,12 @@ Widget::Widget(QWidget *parent)
 Widget::~Widget()
 {
     delete ui;
+}
+
+void Widget::OnEndFind()
+{
+    ui->blockSlider->setEnabled(true);
+    ui->boardSlider->setEnabled(true);
 }
 
 void Widget::on_blockSlider_valueChanged(int value)

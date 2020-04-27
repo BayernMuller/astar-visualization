@@ -1,12 +1,13 @@
 #include "PlayGround.h"
 #include <QGraphicsItem>
 #include <QDebug>
+#include <chrono>
 
 PlayGround::PlayGround(QWidget* parent)
     : QGraphicsView(parent), mScene(parent)
     , mBoardSize(5), mBlockSize(10), mIsPlaying(false)
     , mpStartItem(nullptr), mpEndItem(nullptr), mpMap(nullptr)
-    , mpThread(nullptr)
+    , mpThread(nullptr), mSpeed(5)
 {
     QGraphicsView::setMouseTracking(true);
     setScene(&mScene);
@@ -15,7 +16,18 @@ PlayGround::PlayGround(QWidget* parent)
 
 PlayGround::~PlayGround()
 {
+    if (mpThread)
+    {
+        mIsPlaying = false;
+        mpThread->join();
+        delete mpThread;
+    }
     releaseMap();
+}
+
+void PlayGround::OnSpeedChange(int speed)
+{
+    mSpeed = speed;
 }
 
 void PlayGround::OnBoardResize(int size)
@@ -32,7 +44,11 @@ void PlayGround::OnBlockResize(int size)
 
 void PlayGround::OnClear()
 {
-
+    for (auto graphicItem : items())
+    {
+        auto item = reinterpret_cast<AstarItem*>(graphicItem);
+        item->SetState(AstarItem::eState::WAY);
+    }
 }
 
 void PlayGround::OnPause()
@@ -42,23 +58,9 @@ void PlayGround::OnPause()
 
 void PlayGround::OnStart()
 {
-    point start{mpStartItem->GetPosition().y(), mpStartItem->GetPosition().x()};
-    point end{mpEndItem->GetPosition().y(), mpEndItem->GetPosition().x()};
-
     allocateMap();
-    Astar astar(mBoardSize, mBoardSize, mpMap, start, end);
-    node* n = astar.FindPath();
-
-    // declude start and end point
-    if (n)
-        n = n->parent;
-    while (n && n->parent)
-    {
-        mpMap[n->pt.first][n->pt.second]->SetState(AstarItem::eState::PATH);
-        n = n->parent;
-    }
-
-    releaseMap();
+    mIsPlaying = true;
+    mpThread = new std::thread(wayThread, this);
 }
 
 void PlayGround::allocateMap()
@@ -110,6 +112,8 @@ void PlayGround::draw()
 
 void PlayGround::mousePressEvent(QMouseEvent *event)
 {
+    if (mIsPlaying)
+        return;
     auto item = reinterpret_cast<AstarItem*>(itemAt(event->pos()));
     if (!item)
         return;
@@ -132,6 +136,8 @@ void PlayGround::mousePressEvent(QMouseEvent *event)
 
 void PlayGround::mouseMoveEvent(QMouseEvent* event)
 {
+    if (mIsPlaying)
+        return;
     if (event->buttons() & ~Qt::NoButton)
     {
         auto item = reinterpret_cast<AstarItem*>(itemAt(event->pos()));
@@ -157,6 +163,37 @@ void PlayGround::mouseMoveEvent(QMouseEvent* event)
 }
 
 
-void PlayGround::resizeEvent(QResizeEvent* event)
+uint PlayGround::wayThread(PlayGround *pThis)
 {
+    point start{pThis->mpStartItem->GetPosition().y(), pThis->mpStartItem->GetPosition().x()};
+    point end{pThis->mpEndItem->GetPosition().y(), pThis->mpEndItem->GetPosition().x()};
+    Astar astar(pThis->mBoardSize, pThis->mBoardSize, pThis->mpMap, start, end);
+    astar.Init();
+    int n = 0;
+    node* path = nullptr;
+    while (pThis->mIsPlaying && !astar.GetOpenList().empty())
+    {
+        path = astar.OneStep();
+        if (path)
+            break;
+
+        for (auto n : astar.GetOpenList())
+        {
+            pThis->mpMap[n->pt.first][n->pt.second]->SetState(AstarItem::eState::OPENED);
+        }
+        for (auto n : astar.GetCloseList())
+        {
+            pThis->mpMap[n->pt.first][n->pt.second]->SetState(AstarItem::eState::CLOSED);
+        }
+        qDebug() << "step " << n++;
+        std::this_thread::sleep_for(std::chrono::milliseconds(500 - pThis->mSpeed * 10));
+    }
+    while (path)
+    {
+        pThis->mpMap[path->pt.first][path->pt.second]->SetState(AstarItem::eState::PATH);
+        path = path->parent;
+    }
+    pThis->mIsPlaying = false;
+    pThis->OnEndFind();
+    return 0;
 }

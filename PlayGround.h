@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <QMouseEvent>
 #include <QResizeEvent>
+#include <thread>
 #include "AstarItem.h"
 #include "Astar.h"
 
@@ -14,18 +15,19 @@ class PlayGround : public QGraphicsView
 
 public:
     PlayGround(QWidget* parent = nullptr);
+    virtual ~PlayGround();
 
 public slots:
-    void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void OnSpeedChange(int speed);
     void OnBoardResize(int size);
     void OnBlockResize(int size);
     void OnClear();
     void OnStart();
     void OnPause();
 
-public signals:
+signals:
     void OnEndFind();
 
 private:
@@ -33,7 +35,10 @@ private:
     void releaseMap();
     void allocateMap();
 
+    static uint wayThread(PlayGround* pThis);
+
 private:
+    std::thread* mpThread;
     Astar* mpAstar;
     AstarItem* mpStartItem;
     AstarItem* mpEndItem;
