@@ -7,3 +7,11 @@ Qt program showing the process of Astar algorithm.
 
 [![](result.png)](https://www.youtube.com/watch?v=BKCspx4PZUA)
 
+
+
+
+
+
+### It works on ubuntu as well.
+
+![](ubuntu.png)
