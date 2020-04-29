@@ -1,5 +1,6 @@
 #include "PlayGround.h"
 #include <QGraphicsItem>
+#include <QMessageBox>
 #include <QDebug>
 #include <chrono>
 
@@ -49,18 +50,20 @@ void PlayGround::OnClear()
         auto item = reinterpret_cast<AstarItem*>(graphicItem);
         item->SetState(AstarItem::eState::WAY);
     }
+    mpStartItem = mpEndItem = nullptr;
 }
 
-void PlayGround::OnPause()
+bool PlayGround::OnStart()
 {
-
-}
-
-void PlayGround::OnStart()
-{
+    if (!mpStartItem || !mpEndItem)
+    {
+        QMessageBox::warning(this, "Error", "Set Start and End point");
+        return false;;
+    }
     allocateMap();
     mIsPlaying = true;
     mpThread = new std::thread(wayThread, this);
+    return true;
 }
 
 void PlayGround::allocateMap()
@@ -90,6 +93,7 @@ void PlayGround::releaseMap()
         delete[] mpMap[i];
     }
     delete[] mpMap;
+    mpMap = nullptr;
 }
 
 void PlayGround::draw()
@@ -170,22 +174,22 @@ uint PlayGround::wayThread(PlayGround *pThis)
     Astar astar(pThis->mBoardSize, pThis->mBoardSize, pThis->mpMap, start, end);
     astar.Init();
     int n = 0;
+
     node* path = nullptr;
     while (pThis->mIsPlaying && !astar.GetOpenList().empty())
     {
-        path = astar.OneStep();
-        if (path)
+        auto result = astar.OneStep();
+        if (path = get<0>(result))
             break;
 
-        for (auto n : astar.GetOpenList())
+        for (auto n : get<1>(result))
         {
             pThis->mpMap[n->pt.first][n->pt.second]->SetState(AstarItem::eState::OPENED);
         }
-        for (auto n : astar.GetCloseList())
+        for (auto n : get<2>(result))
         {
             pThis->mpMap[n->pt.first][n->pt.second]->SetState(AstarItem::eState::CLOSED);
         }
-        qDebug() << "step " << n++;
         std::this_thread::sleep_for(std::chrono::milliseconds(500 - pThis->mSpeed * 10));
     }
     while (path)
@@ -195,5 +199,6 @@ uint PlayGround::wayThread(PlayGround *pThis)
     }
     pThis->mIsPlaying = false;
     pThis->OnEndFind();
+    pThis->releaseMap();
     return 0;
 }

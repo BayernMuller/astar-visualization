@@ -24,8 +24,7 @@ public slots:
     void OnBoardResize(int size);
     void OnBlockResize(int size);
     void OnClear();
-    void OnStart();
-    void OnPause();
+    bool OnStart();
 
 signals:
     void OnEndFind();

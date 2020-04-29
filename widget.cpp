@@ -2,7 +2,6 @@
 #include "ui_widget.h"
 #include "PlayGround.h"
 
-
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
@@ -11,13 +10,8 @@ Widget::Widget(QWidget *parent)
     connect(ui->boardSlider, SIGNAL(valueChanged(int)), ui->graphicsView, SLOT(OnBoardResize(int)));
     connect(ui->blockSlider, SIGNAL(valueChanged(int)), ui->graphicsView, SLOT(OnBlockResize(int)));
     connect(ui->speedSlider, SIGNAL(valueChanged(int)), ui->graphicsView, SLOT(OnSpeedChange(int)));
-    connect(ui->startButton, SIGNAL(clicked()), ui->graphicsView, SLOT(OnStart()));
     connect(ui->clearButton, SIGNAL(clicked()), ui->graphicsView, SLOT(OnClear()));
-    connect(ui->pauseButton, SIGNAL(clicked()), ui->graphicsView, SLOT(OnPause()));
     connect(ui->graphicsView, SIGNAL(OnEndFind()), this, SLOT(OnEndFind()));
-
-    ui->pauseButton->setEnabled(false);
-    ui->stepButton->setEnabled(false);
 }
 
 Widget::~Widget()
@@ -49,19 +43,11 @@ void Widget::on_boardSlider_valueChanged(int value)
     ui->boardNum->setText(str);
 }
 
-void Widget::on_autoRadio_pressed()
-{
-    ui->speedSlider->setEnabled(true);
-}
-
-void Widget::on_stepRadio_pressed()
-{
-    ui->speedSlider->setEnabled(false);
-}
-
 void Widget::on_startButton_clicked()
 {
-
-    ui->blockSlider->setEnabled(false);
-    ui->boardSlider->setEnabled(false);
+    if (ui->graphicsView->OnStart())
+    {
+        ui->blockSlider->setEnabled(false);
+        ui->boardSlider->setEnabled(false);
+    }
 }

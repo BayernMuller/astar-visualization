@@ -22,29 +22,18 @@ void Astar::Init()
     mOpenList.insert(new node(mStart));
 }
 
-node* Astar::FindPath()
+Astar::return_type Astar::OneStep()
 {
-    Init();
-	while (!mOpenList.empty())
-	{
-		auto path = OneStep();
-		if (path)
-		{
-			return path;
-		}
-	}
-	return nullptr;
-}
-
-node* Astar::OneStep()
-{
+    list<node_ptr> open;
+    list<node_ptr> close;
     mpCurrent = *mOpenList.begin();
 	if (mpCurrent->pt == mEnd)
 	{
-        return mpCurrent;
+        return make_tuple(mpCurrent, open, close);
 	}
 
     mCloseList.insert(mpCurrent);
+    close.push_back(mpCurrent);
     mOpenList.erase(mOpenList.begin());
 
 	for (int i = 0; i < 8; i++)
@@ -63,6 +52,7 @@ node* Astar::OneStep()
         if (pSuccess == end(mOpenList))
         {
             mOpenList.insert(newNode);
+            open.push_back(newNode);
             continue;
 		}
         else if (newNodeG < (*pSuccess)->G)
@@ -73,7 +63,7 @@ node* Astar::OneStep()
 		}
         delete newNode;
 	}
-	return nullptr;
+    return make_tuple(nullptr, open, close);
 }
 
 Astar::list_type& Astar::GetOpenList()

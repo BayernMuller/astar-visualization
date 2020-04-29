@@ -1,6 +1,7 @@
 #ifndef ASTAR_H
 #define ASTAR_H
 #include <set>
+#include <list>
 using namespace std;
 
 class AstarItem;
@@ -28,14 +29,13 @@ public:
 	using compare_type = bool(*)(node_ptr, node_ptr);
     using list_type = multiset<node_ptr, compare_type>;
 	using node_iterator = list_type::iterator;
-	
+    using return_type = tuple<node_ptr, list<node_ptr>, list<node_ptr>>;
 public:
 	Astar(int height, int width, map_type map, point start, point end);
 	~Astar();
 
     void Init();
-	node* FindPath();
-	node* OneStep();
+    return_type OneStep();
 
     list_type& GetOpenList();
     list_type& GetCloseList();
